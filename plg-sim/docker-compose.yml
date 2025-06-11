@@ -5,11 +5,15 @@ services:
     build: ./backend
     ports:
       - "3001:3001"
+    env_file:
+      - .env
     environment:
       - NODE_ENV=development
+      - HUBSPOT_API_KEY=${HUBSPOT_API_KEY}
+      - HUBSPOT_FORM_URL=${HUBSPOT_FORM_URL}
     volumes:
       - ./backend:/app
-      - ./backend/data.sqlite:/app/data.sqlite
+      - sqlite_data:/app/data
       - /app/node_modules
     networks:
       - plg-network
@@ -44,4 +48,7 @@ services:
 
 networks:
   plg-network:
-    driver: bridge 
+    driver: bridge
+
+volumes:
+  sqlite_data: 

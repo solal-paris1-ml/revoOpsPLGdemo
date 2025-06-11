@@ -49,6 +49,47 @@ The application will be available at:
 - Backend API: http://localhost:3001
 - Streamlit Simulator: http://localhost:8501
 
+## Live Monitoring
+
+You can monitor the events and contact messages in real-time through these endpoints:
+
+### Events Monitoring
+- **URL**: `http://localhost:3001/api/events`
+- **Method**: GET
+- **Description**: Returns all recorded events in real-time
+- **Example Response**:
+```json
+[
+  {
+    "id": 1,
+    "type": "button_click",
+    "toolName": "pricing_calculator",
+    "timestamp": "2024-03-14T10:30:00Z"
+  }
+]
+```
+
+### Contact Messages Monitoring
+- **URL**: `http://localhost:3001/api/contact-messages`
+- **Method**: GET
+- **Description**: Returns all submitted contact messages in real-time
+- **Example Response**:
+```json
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "email": "john@example.com",
+    "company": "Acme Inc",
+    "phone": "+1234567890",
+    "budget": "10000-50000",
+    "message": "Interested in your product",
+    "product": "enterprise",
+    "timestamp": "2024-03-14T10:30:00Z"
+  }
+]
+```
+
 ## API Endpoints
 
 ### Event Tracking

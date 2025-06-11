@@ -42,9 +42,12 @@ app.post('/api/contact-message', async (req, res) => {
     // Log the contact form submission as an event
     await insertEvent({ type: 'contact_form_submit', toolName: product || 'general' });
 
-    // Send to HubSpot (using provided portal ID and new form GUID)
-    const hubspotUrl = 'https://api-eu1.hsforms.com/submissions/v3/integration/submit/146178857/1b720be4-7b2e-4593-8002-82a1c330be7f';
-    const hubspotPayload = {
+    // Send to HubSpot form
+    const hubspotFormUrl = process.env.HUBSPOT_FORM_URL;
+    if (!hubspotFormUrl) {
+      throw new Error('HUBSPOT_FORM_URL environment variable is not set');
+    }
+    const hubspotFormPayload = {
       fields: [
         { name: 'email', value: email },
         { name: 'firstname', value: name },
@@ -59,11 +62,81 @@ app.post('/api/contact-message', async (req, res) => {
         pageName: 'Contact Us'
       }
     };
-    await axios.post(hubspotUrl, hubspotPayload, {
-      headers: { 'Content-Type': 'application/json' }
-    });
 
-    res.status(200).json({ status: 'ok' });
+    // Send to HubSpot marketing contacts
+    const hubspotMarketingUrl = 'https://api-eu1.hubapi.com/communication-preferences/v3/subscribe';
+    
+    // First, get the subscription ID for marketing
+    const subscriptionTypesUrl = 'https://api-eu1.hubapi.com/communication-preferences/v3/definitions';
+    const subscriptionTypesResponse = await axios.get(subscriptionTypesUrl, {
+      headers: { 
+        'Authorization': `Bearer ${process.env.HUBSPOT_API_KEY}`
+      }
+    });
+    
+    console.log('Available subscription types:', JSON.stringify(subscriptionTypesResponse.data.subscriptionDefinitions, null, 2));
+    
+    // Find the marketing subscription ID - try different possible names
+    const marketingSubscription = subscriptionTypesResponse.data.subscriptionDefinitions.find(
+      sub => ['Marketing', 'MARKETING', 'marketing', 'Email Marketing', 'Email marketing'].includes(sub.name)
+    );
+    
+    if (!marketingSubscription) {
+      console.error('Available subscription types:', subscriptionTypesResponse.data.subscriptionDefinitions.map(s => s.name));
+      throw new Error('Could not find Marketing subscription type. Available types: ' + 
+        subscriptionTypesResponse.data.subscriptionDefinitions.map(s => s.name).join(', '));
+    }
+
+    console.log('Found marketing subscription:', marketingSubscription);
+
+    const hubspotMarketingPayload = {
+      emailAddress: email,
+      subscriptionId: marketingSubscription.id,
+      legalBasis: "LEGITIMATE_INTEREST_PQL",
+      legalBasisExplanation: "User submitted contact form"
+    };
+
+    // Send both requests in parallel
+    try {
+      // First, send to HubSpot form
+      console.log('Sending to HubSpot form URL:', hubspotFormUrl);
+      console.log('Form payload:', JSON.stringify(hubspotFormPayload, null, 2));
+      
+      const formResponse = await axios.post(hubspotFormUrl, hubspotFormPayload, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+      console.log('HubSpot form response:', formResponse.data);
+
+      // Then, send to HubSpot marketing
+      if (!process.env.HUBSPOT_API_KEY) {
+        throw new Error('HUBSPOT_API_KEY is not set');
+      }
+
+      console.log('Sending to HubSpot marketing URL:', hubspotMarketingUrl);
+      console.log('Marketing payload:', JSON.stringify(hubspotMarketingPayload, null, 2));
+      
+      const marketingResponse = await axios.post(hubspotMarketingUrl, hubspotMarketingPayload, {
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.HUBSPOT_API_KEY}`
+        }
+      });
+      console.log('HubSpot marketing response:', marketingResponse.data);
+
+      res.status(200).json({ status: 'ok' });
+    } catch (error) {
+      console.error('Error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        url: error.config?.url,
+        headers: error.config?.headers ? {
+          ...error.config.headers,
+          'Authorization': error.config.headers.Authorization ? 'Bearer [REDACTED]' : undefined
+        } : undefined
+      });
+      throw error;
+    }
   } catch (error) {
     console.error('Error saving or sending contact message:', error.response?.data || error.message);
     res.status(500).json({ error: 'Failed to save or send contact message' });
