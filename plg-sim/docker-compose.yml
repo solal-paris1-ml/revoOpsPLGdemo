@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./backend:/app
+      - ./backend/data.sqlite:/app/data.sqlite
+      - /app/node_modules
+    networks:
+      - plg-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://backend:3001
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - plg-network
+
+  streamlit:
+    build: ./backend
+    command: streamlit run /app/streamlit-simulator/app.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./streamlit-simulator:/app/streamlit-simulator
+    environment:
+      - BACKEND_URL=http://backend:3001
+    depends_on:
+      - backend
+    networks:
+      - plg-network
+
+networks:
+  plg-network:
+    driver: bridge 
