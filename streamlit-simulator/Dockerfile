@@ -34,6 +34,6 @@ RUN npm install --production
 # Now copy the rest of the app
 COPY . .
 
-EXPOSE 3001
+EXPOSE 8501
 
 CMD ["node", "index.js"]
