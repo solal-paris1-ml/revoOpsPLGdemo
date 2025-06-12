@@ -4,28 +4,30 @@ A comprehensive simulation environment for testing Product-Led Growth (PLG) moti
 
 ## ⚡ Quick Start (Recommended)
 
-1. Clone the repository
-2. Create a `.env` file in the `backend` directory with the following variables:
+1. **Clone the repository**
+
+2. **Create a `.env` file** in the `backend` directory with the following variables:
 ```bash
 HUBSPOT_FORM_URL=your_hubspot_form_url
 HUBSPOT_API_KEY=your_hubspot_api_key
 PORT=3001
 ```
 
-3. Start all services:
+3. **Start all services** using Docker:
 ```bash
 docker-compose up --build
 ```
 
-This will start all services:
-- 🌐 Frontend: http://localhost:3000
-- 🔌 Backend API: http://localhost:3001
-- 📊 Streamlit Simulator: http://localhost:8501
+This will start the following services:
+- 🌐 **Frontend**: http://localhost:3000  
+- 🔌 **Backend API**: http://localhost:3001  
+- 📊 **Streamlit Simulator**: http://localhost:8501  
 
-
-```
+> 🔒 **Important Note:**  
+> The SQLite database used by the backend is stored **locally on your machine** and is **not exposed externally**. All event and contact data remains fully private and accessible only within your local environment. This setup is ideal for secure testing and development.
 
 ## 📁 Project Structure
+```
 .
 ├── backend/              # Express API server
 │   ├── index.js         # Main server file
@@ -39,7 +41,6 @@ This will start all services:
 │   └── requirements.txt # Python dependencies
 └── docker-compose.yml   # Service orchestration
 ```
-
 
 ### Quick Links
 - [Features](#-features)
@@ -57,9 +58,7 @@ This will start all services:
 #### Event Tracking
 ```bash
 # Record a new event
-curl -X POST http://localhost:3001/api/event \
-  -H "Content-Type: application/json" \
-  -d '{
+curl -X POST http://localhost:3001/api/event   -H "Content-Type: application/json"   -d '{
     "type": "page_view",
     "toolName": "Product One",
     "details": {
@@ -75,9 +74,7 @@ curl http://localhost:3001/api/events
 #### Contact Form
 ```bash
 # Submit a contact form
-curl -X POST http://localhost:3001/api/contact-message \
-  -H "Content-Type: application/json" \
-  -d '{
+curl -X POST http://localhost:3001/api/contact-message   -H "Content-Type: application/json"   -d '{
     "name": "John Doe",
     "email": "john@example.com",
     "company": "Acme Inc",
@@ -91,7 +88,6 @@ curl -X POST http://localhost:3001/api/contact-message \
 curl http://localhost:3001/api/contact-messages
 ```
 </details>
-
 
 ## ✨ Features
 
@@ -149,15 +145,15 @@ The application tracks the following event types:
 ### Environment Variables
 The application requires the following environment variables to be set:
 
-1. `HUBSPOT_FORM_URL`: Your HubSpot form submission URL
-   - Get this from your HubSpot form settings
+1. `HUBSPOT_FORM_URL`: Your HubSpot form submission URL  
+   - Get this from your HubSpot form settings  
    - Format: `https://api.hsforms.com/submissions/v3/integration/submit/{portalId}/{formId}`
 
-2. `HUBSPOT_API_KEY`: Your HubSpot API key
-   - Generate this from your HubSpot account settings
+2. `HUBSPOT_API_KEY`: Your HubSpot API key  
+   - Generate this from your HubSpot account settings  
    - Required for marketing subscription management
 
-3. `PORT`: (Optional) The port for the backend API
+3. `PORT`: (Optional) The port for the backend API  
    - Default: 3001
 
 ### Customizing Form Fields
@@ -302,4 +298,4 @@ Request body:
 Retrieve all submitted contact messages.
 </details>
 
-> 💡 **Note**: The local development option is provided for developers who need to modify the code. For most users, the Docker setup is recommended as it ensures consistent environments and includes all necessary dependencies. 
+> 💡 **Note**: The local development option is provided for developers who need to modify the code. For most users, the Docker setup is recommended as it ensures consistent environments and includes all necessary dependencies.
