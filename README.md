@@ -21,8 +21,8 @@ docker-compose up --build
 This will start the following services:
 - 🌐 **Frontend**: http://localhost:3000  
 - 🔌 **Backend API**: http://localhost:3001
-      events : http://localhost:3001/api/event
-      contact-message : http://localhost:3001/api/contact-message
+- events : http://localhost:3001/api/event
+- contact-message : http://localhost:3001/api/contact-message
 - 📊 **Streamlit Simulator**: http://localhost:8501  
 
 > 🔒 **Important Note:**  
