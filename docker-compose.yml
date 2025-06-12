@@ -11,10 +11,6 @@ services:
       - NODE_ENV=development
       - HUBSPOT_API_KEY=${HUBSPOT_API_KEY}
       - HUBSPOT_FORM_URL=${HUBSPOT_FORM_URL}
-    volumes:
-      - backend:/app
-      - sqlite_data:/app/data
-      - /app/node_modules
     networks:
       - plg-network
 
