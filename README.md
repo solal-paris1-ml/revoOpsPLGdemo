@@ -23,7 +23,6 @@ This will start all services:
 - 📊 Streamlit Simulator: http://localhost:8501
 
 ### Quick Links
-- [Project Structure](#-project-structure)
 - [Features](#-features)
 - [Event Types](#-event-types)
 - [Configuration](#-configuration)
@@ -32,6 +31,9 @@ This will start all services:
 - [API Endpoints](#-api-endpoints)
 
 ### Quick API Reference
+
+<details>
+<summary>Click to expand API reference</summary>
 
 #### Event Tracking
 ```bash
@@ -69,8 +71,12 @@ curl -X POST http://localhost:3001/api/contact-message \
 # Get all contact messages
 curl http://localhost:3001/api/contact-messages
 ```
+</details>
 
 ## 📁 Project Structure
+
+<details>
+<summary>Click to expand project structure</summary>
 
 ```
 .
@@ -86,6 +92,7 @@ curl http://localhost:3001/api/contact-messages
 │   └── requirements.txt # Python dependencies
 └── docker-compose.yml   # Service orchestration
 ```
+</details>
 
 ## ✨ Features
 
@@ -137,6 +144,9 @@ The application tracks the following event types:
 
 ## 🔐 Configuration
 
+<details>
+<summary>Click to expand configuration details</summary>
+
 ### Environment Variables
 The application requires the following environment variables to be set:
 
@@ -162,6 +172,7 @@ The contact form fields can be customized by modifying the `hubspotFormPayload` 
 - product
 
 To add or modify fields, update the `fields` array in the payload to match your HubSpot form configuration.
+</details>
 
 ## 💻 Development Options
 
