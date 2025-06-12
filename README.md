@@ -22,6 +22,25 @@ This will start all services:
 - 🔌 Backend API: http://localhost:3001
 - 📊 Streamlit Simulator: http://localhost:8501
 
+
+```
+
+## 📁 Project Structure
+.
+├── backend/              # Express API server
+│   ├── index.js         # Main server file
+│   ├── db.js           # Database operations
+│   └── Dockerfile      # Backend container config
+├── frontend/            # React application
+│   ├── src/            # Source code
+│   └── Dockerfile      # Frontend container config
+├── streamlit-simulator/ # Streamlit simulation tool
+│   ├── app.py          # Main simulator file
+│   └── requirements.txt # Python dependencies
+└── docker-compose.yml   # Service orchestration
+```
+
+
 ### Quick Links
 - [Features](#-features)
 - [Event Types](#-event-types)
@@ -73,26 +92,6 @@ curl http://localhost:3001/api/contact-messages
 ```
 </details>
 
-## 📁 Project Structure
-
-<details>
-<summary>Click to expand project structure</summary>
-
-```
-.
-├── backend/              # Express API server
-│   ├── index.js         # Main server file
-│   ├── db.js           # Database operations
-│   └── Dockerfile      # Backend container config
-├── frontend/            # React application
-│   ├── src/            # Source code
-│   └── Dockerfile      # Frontend container config
-├── streamlit-simulator/ # Streamlit simulation tool
-│   ├── app.py          # Main simulator file
-│   └── requirements.txt # Python dependencies
-└── docker-compose.yml   # Service orchestration
-```
-</details>
 
 ## ✨ Features
 
