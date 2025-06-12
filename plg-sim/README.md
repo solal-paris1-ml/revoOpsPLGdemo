@@ -1,10 +1,30 @@
-# PLG Motion Simulation App
+# 🚀 PLG Motion Simulation App
 
 A comprehensive simulation environment for testing Product-Led Growth (PLG) motion tracking and analytics. This application simulates user interactions with a product showcase website, including event tracking, form submissions, and analytics.
 
-## Features
+## ⚡ Quick Start (Recommended)
 
-### Frontend Application
+1. Clone the repository
+2. Create a `.env` file in the `backend` directory with the following variables:
+```bash
+HUBSPOT_FORM_URL=your_hubspot_form_url
+HUBSPOT_API_KEY=your_hubspot_api_key
+PORT=3001
+```
+
+3. Start all services:
+```bash
+docker-compose up --build
+```
+
+This will start all services:
+- 🌐 Frontend: http://localhost:3000
+- 🔌 Backend API: http://localhost:3001
+- 📊 Streamlit Simulator: http://localhost:8501
+
+## ✨ Features
+
+### 🎨 Frontend Application
 - Modern React-based user interface
 - Product showcase with detailed descriptions
 - Interactive navigation and user flows
@@ -12,7 +32,7 @@ A comprehensive simulation environment for testing Product-Led Growth (PLG) moti
 - Real-time event tracking
 - Responsive design for all devices
 
-### Backend API
+### ⚙️ Backend API
 - Express.js server for handling requests
 - SQLite database for data persistence
 - Event tracking and storage
@@ -20,7 +40,7 @@ A comprehensive simulation environment for testing Product-Led Growth (PLG) moti
 - HubSpot integration
 - CORS support for development
 
-### Streamlit Simulator
+### 🎮 Streamlit Simulator
 - Interactive simulation of user events
 - Batch event submission capability
 - Contact form simulation
@@ -28,35 +48,13 @@ A comprehensive simulation environment for testing Product-Led Growth (PLG) moti
 - Real-time feedback on submissions
 - JSON-based configuration for both events and contacts
 
-## Prerequisites
+## 📡 Live Monitoring
 
-- Docker and Docker Compose
-- Node.js 18+ (for local development)
-- Python 3.8+ (for Streamlit simulator)
+Monitor events and contact messages in real-time:
 
-## Getting Started
-
-1. Clone the repository
-2. Navigate to the project directory
-3. Start all services:
-
-```bash
-docker-compose up --build
-```
-
-The application will be available at:
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:3001
-- Streamlit Simulator: http://localhost:8501
-
-## Live Monitoring
-
-You can monitor the events and contact messages in real-time through these endpoints:
-
-### Events Monitoring
+### 📊 Events Monitoring
 - **URL**: `http://localhost:3001/api/events`
 - **Method**: GET
-- **Description**: Returns all recorded events in real-time
 - **Example Response**:
 ```json
 [
@@ -69,10 +67,9 @@ You can monitor the events and contact messages in real-time through these endpo
 ]
 ```
 
-### Contact Messages Monitoring
+### 📝 Contact Messages Monitoring
 - **URL**: `http://localhost:3001/api/contact-messages`
 - **Method**: GET
-- **Description**: Returns all submitted contact messages in real-time
 - **Example Response**:
 ```json
 [
@@ -90,9 +87,9 @@ You can monitor the events and contact messages in real-time through these endpo
 ]
 ```
 
-## API Endpoints
+## 🔌 API Endpoints
 
-### Event Tracking
+### 📊 Event Tracking
 
 #### POST /api/event
 Record a new user interaction event.
@@ -112,7 +109,7 @@ Request body:
 #### GET /api/events
 Retrieve all recorded events.
 
-### Contact Form
+### 📝 Contact Form
 
 #### POST /api/contact-message
 Submit a contact form message to HubSpot.
@@ -133,68 +130,7 @@ Request body:
 #### GET /api/contact-messages
 Retrieve all submitted contact messages.
 
-## Streamlit Simulator
-
-The Streamlit simulator provides an interface for testing and simulating user interactions with the application.
-
-### Event Tracking Simulation
-
-#### Single Event Submission
-- Select from predefined event types
-- Add optional tool name
-- Include detailed JSON payload
-- Real-time submission feedback
-
-#### Batch Event Submission
-- Submit multiple events via JSON array
-- Validate event types
-- Automatic error handling
-- Success rate tracking
-
-Example batch event JSON:
-```json
-[
-    {
-        "type": "page_view",
-        "toolName": "Product One",
-        "details": {
-            "page": "home",
-            "timestamp": "2024-03-20T12:00:00Z"
-        }
-    }
-]
-```
-
-### Contact Form Simulation
-
-#### Single Contact Submission
-- Fill in contact details
-- Select product and budget range
-- Submit individual contact forms
-- Real-time submission feedback
-
-#### Batch Contact Submission
-- Submit multiple contacts via JSON array
-- Validate product and budget values
-- Automatic error handling
-- Success rate tracking
-
-Example batch contact JSON:
-```json
-[
-    {
-        "name": "John Doe",
-        "email": "john@example.com",
-        "company": "Acme Inc",
-        "phone": "+1234567890",
-        "budget": "> $10,000",
-        "message": "Interested in your product",
-        "product": "Product One"
-    }
-]
-```
-
-## Event Types
+## 📋 Event Types
 
 The application tracks the following event types:
 - `page_view`: User views a page
@@ -208,7 +144,7 @@ The application tracks the following event types:
 - `chat_with_us_click`: User initiates chat
 - `custom`: Custom event type
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 plg-sim/
@@ -225,9 +161,21 @@ plg-sim/
 └── docker-compose.yml   # Service orchestration
 ```
 
-## Development
+## 💻 Development Options
 
-### Local Development
+### 🐳 Option 1: Docker (Recommended)
+All dependencies are included in the Docker containers. Simply run:
+```bash
+docker-compose up --build
+```
+
+### 🔧 Option 2: Local Development
+If you prefer to run services locally (not recommended for most users):
+
+Prerequisites:
+- Node.js 18+
+- Python 3.8+
+- npm
 
 1. Backend:
 ```bash
@@ -249,6 +197,36 @@ cd streamlit-simulator
 pip install -r requirements.txt
 streamlit run app.py
 ```
+
+## 🔐 Configuration
+
+### Environment Variables
+The application requires the following environment variables to be set:
+
+1. `HUBSPOT_FORM_URL`: Your HubSpot form submission URL
+   - Get this from your HubSpot form settings
+   - Format: `https://api.hsforms.com/submissions/v3/integration/submit/{portalId}/{formId}`
+
+2. `HUBSPOT_API_KEY`: Your HubSpot API key
+   - Generate this from your HubSpot account settings
+   - Required for marketing subscription management
+
+3. `PORT`: (Optional) The port for the backend API
+   - Default: 3001
+
+### Customizing Form Fields
+The contact form fields can be customized by modifying the `hubspotFormPayload` in `backend/index.js`. The current implementation includes:
+- email
+- firstname
+- company
+- phone
+- budget
+- message
+- product
+
+To add or modify fields, update the `fields` array in the payload to match your HubSpot form configuration.
+
+> 💡 **Note**: The local development option is provided for developers who need to modify the code. For most users, the Docker setup is recommended as it ensures consistent environments and includes all necessary dependencies.
 
 ## License
 
