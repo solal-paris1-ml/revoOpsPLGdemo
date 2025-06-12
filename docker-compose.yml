@@ -1,9 +1,8 @@
-version: '3.8'
-
 services:
   backend:
     container_name: backend
-    build: backend
+    build: 
+      context: ./backend
     ports:
       - "3001:3001"
     env_file:
@@ -12,33 +11,31 @@ services:
       - NODE_ENV=development
       - HUBSPOT_API_KEY=${HUBSPOT_API_KEY}
       - HUBSPOT_FORM_URL=${HUBSPOT_FORM_URL}
+    volumes:
+      - sqlite_data:/app/data
     networks:
       - plg-network
 
   frontend:
     container_name: frontend
-    build: frontend
+    build: 
+      context: ./frontend
     ports:
       - "3000:3000"
     environment:
-      - REACT_APP_API_URL=http:backend:3001
-    volumes:
-      - frontend:/app
-      - /app/node_modules
+      - REACT_APP_API_URL=http://backend:3001
     depends_on:
       - backend
     networks:
       - plg-network
 
   streamlit:
-    build: steamlit-simulator
-    command: streamlit run /apstreamlit-simulator/app.py --server.port 8501 --server.address 0.0.0.0
+    build: 
+      context: ./streamlit-simulator
     ports:
       - "8501:8501"
-    volumes:
-      - streamlit-simulator:/apstreamlit-simulator
     environment:
-      - BACKEND_URL=http:backend:3001
+      - BACKEND_URL=http://backend:3001
     depends_on:
       - backend
     networks:
