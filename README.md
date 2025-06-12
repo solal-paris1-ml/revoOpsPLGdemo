@@ -301,3 +301,39 @@ Retrieve all submitted contact messages.
 </details>
 
 > 💡 **Note**: The local development option is provided for developers who need to modify the code. For most users, the Docker setup is recommended as it ensures consistent environments and includes all necessary dependencies.
+
+## 🔧 Environment Setup
+
+1. **Create Environment File**
+   Create a `.env` file in the root directory with the following variables:
+
+   ```bash
+   # HubSpot Configuration
+   HUBSPOT_API_KEY=your_hubspot_api_key_here
+   HUBSPOT_FORM_URL=your_hubspot_form_url_here
+
+   # Backend Configuration
+   PORT=3001
+   NODE_ENV=development
+
+   # Frontend Configuration
+   REACT_APP_API_URL=http://localhost:3001
+
+   # Streamlit Configuration
+   BACKEND_URL=http://localhost:3001
+   ```
+
+2. **Get HubSpot Credentials**
+   - `HUBSPOT_API_KEY`: Get this from your HubSpot account settings
+   - `HUBSPOT_FORM_URL`: Get this from your HubSpot form settings
+     Format: `https://api.hsforms.com/submissions/v3/integration/submit/{portalId}/{formId}`
+
+3. **Start the Application**
+   ```bash
+   docker compose up --build
+   ```
+
+   This will start all services:
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:3001
+   - Streamlit Simulator: http://localhost:8501
