@@ -74,17 +74,18 @@ app.post('/api/contact-message', async (req, res) => {
       }
     });
     
-    console.log('Available subscription types:', JSON.stringify(subscriptionTypesResponse.data.subscriptionDefinitions, null, 2));
+    const availableSubscriptions = subscriptionTypesResponse.data.subscriptionDefinitions;
+    console.log('Available subscription types:', availableSubscriptions.map(s => s.name));
     
-    // Find the marketing subscription ID - try different possible names
-    const marketingSubscription = subscriptionTypesResponse.data.subscriptionDefinitions.find(
-      sub => ['Marketing', 'MARKETING', 'marketing', 'Email Marketing', 'Email marketing'].includes(sub.name)
+    // Find the marketing subscription ID
+    const marketingSubscription = availableSubscriptions.find(
+      sub => sub.name === 'Marketing Information'
     );
     
     if (!marketingSubscription) {
-      console.error('Available subscription types:', subscriptionTypesResponse.data.subscriptionDefinitions.map(s => s.name));
-      throw new Error('Could not find Marketing subscription type. Available types: ' + 
-        subscriptionTypesResponse.data.subscriptionDefinitions.map(s => s.name).join(', '));
+      const availableTypes = availableSubscriptions.map(s => s.name).join(', ');
+      console.error('Available subscription types:', availableTypes);
+      throw new Error(`Could not find Marketing Information subscription type. Available types: ${availableTypes}`);
     }
 
     console.log('Found marketing subscription:', marketingSubscription);
