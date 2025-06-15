@@ -12,7 +12,7 @@ services:
       - HUBSPOT_API_KEY=${HUBSPOT_API_KEY}
       - HUBSPOT_FORM_URL=${HUBSPOT_FORM_URL}
     volumes:
-      - sqlite_data:/app/data
+      - ./backend/data:/app/data
     networks:
       - plg-network
 
@@ -44,6 +44,3 @@ services:
 networks:
   plg-network:
     driver: bridge
-
-volumes:
-  sqlite_data: 

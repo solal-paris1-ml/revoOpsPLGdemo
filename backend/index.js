@@ -38,6 +38,30 @@ app.post('/api/contact-message', async (req, res) => {
     return res.status(400).json({ error: 'Missing required fields' });
   }
   try {
+    // First, mark as marketing contact BEFORE form submission
+    try {
+      const marketingContactUrl = 'https://api.hubapi.com/crm/v3/marketing-contacts/convert';
+      const marketingContactPayload = {
+        emailAddresses: [email]
+      };
+      
+      console.log('Converting to marketing contact:', marketingContactPayload);
+      const marketingContactResponse = await axios.post(marketingContactUrl, marketingContactPayload, {
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.HUBSPOT_API_KEY}`
+        }
+      });
+      console.log('Marketing contact conversion response:', marketingContactResponse.data);
+
+      // Wait a moment to ensure the marketing contact status is updated
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    } catch (marketingContactError) {
+      console.error('Error converting to marketing contact:', marketingContactError.response?.data || marketingContactError.message);
+      // Continue with form submission even if marketing conversion fails
+    }
+
+    // Now proceed with form submission
     await insertContactMessage({ name, email, company, phone, budget, message, product });
     // Log the contact form submission as an event
     await insertEvent({ type: 'contact_form_submit', toolName: product || 'general' });
@@ -97,9 +121,8 @@ app.post('/api/contact-message', async (req, res) => {
       legalBasisExplanation: "User submitted contact form"
     };
 
-    // Send both requests in parallel
     try {
-      // First, send to HubSpot form
+      // Send to HubSpot form
       console.log('Sending to HubSpot form URL:', hubspotFormUrl);
       console.log('Form payload:', JSON.stringify(hubspotFormPayload, null, 2));
       

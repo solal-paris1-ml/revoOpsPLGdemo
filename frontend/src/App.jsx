@@ -151,12 +151,28 @@ const ContactUsPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API_URL}/api/contact-message`, { ...form, product: productName });
+      const response = await axios.post(`${API_URL}/api/contact-message`, { ...form, product: productName });
       await logEvent('send_message_click', productName, form);
-      alert('Thank you for your message!');
+      
+      if (response.data.status === 'ok') {
+        alert('Thank you for your message! Your form has been submitted successfully.');
+      } else if (response.data.warning) {
+        alert(`Form submitted successfully, but there was a warning: ${response.data.warning}`);
+      }
+      
       setForm({ name: '', email: '', company: '', phone: '', budget: '', message: '' });
     } catch (err) {
-      alert('There was an error sending your message.');
+      let errorMessage = 'There was an error sending your message.';
+      
+      if (err.response?.data?.error) {
+        if (err.response.data.error.includes('already subscribed')) {
+          errorMessage = 'Your message was received, but you are already subscribed to our marketing communications.';
+        } else {
+          errorMessage = `Error: ${err.response.data.error}`;
+        }
+      }
+      
+      alert(errorMessage);
     }
   };
   return (
